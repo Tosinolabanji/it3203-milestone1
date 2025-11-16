@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Web Server Evolution Quiz</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.quiz-container {max-width: 750px; margin: 40px auto; background: #fff; padding: 30px;
+border-radius: 10px; box-shadow: 0 0 12px rgba(0,0,0,0.1);}
+.question {margin-bottom: 25px;}
+.correct {color: green;}
+.incorrect {color: red;}
+.result-box {margin-top: 25px; padding: 15px; border-radius: 8px;}
+</style>
+</head>
+<body>
+
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="topic1.html">History & Evolution</a></li>
+<li><a href="topic2.html">IIS in Context</a></li>
+<li><a href="keyconcepts.html">Key Concepts</a></li>
+<li><a href="references.html">References</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="quiz.html" class="active">Quiz</a></li>
+</ul>
+</nav>
+
+<div class="quiz-container">
+<h2>Self‑Assessment Quiz: Evolution of Web Servers & IIS</h2>
+
+<form id="quizForm">
+
+<div class="question">
+<label><strong>1. Fill in the blank:</strong><br>
+The first widely adopted web server developed at CERN was called ________.</label><br>
+<input type="text" id="q1">
+</div>
+
+<div class="question">
+<label><strong>2. Which was one of the earliest major web servers?</strong></label><br>
+<input type="radio" name="q2" value="Apache"> Apache HTTP Server<br>
+<input type="radio" name="q2" value="IIS"> Microsoft IIS<br>
+<input type="radio" name="q2" value="Nginx"> Nginx<br>
+</div>
+
+<div class="question">
+<label><strong>3. Microsoft IIS primarily runs on which OS?</strong></label><br>
+<input type="radio" name="q3" value="Windows"> Windows<br>
+<input type="radio" name="q3" value="Linux"> Linux<br>
+<input type="radio" name="q3" value="macOS"> macOS<br>
+</div>
+
+<div class="question">
+<label><strong>4. What does IIS stand for?</strong></label><br>
+<input type="radio" name="q4" value="Internet Information Services"> Internet Information Services<br>
+<input type="radio" name="q4" value="Internal Integration Server"> Internal Integration Server<br>
+<input type="radio" name="q4" value="Internet Infrastructure System"> Internet Infrastructure System<br>
+</div>
+
+<div class="question">
+<label><strong>5. Which are features of modern web servers? (Select all that apply)</strong></label><br>
+<input type="checkbox" name="q5" value="SSL/TLS Support"> SSL/TLS Support<br>
+<input type="checkbox" name="q5" value="Static File Hosting"> Static File Hosting<br>
+<input type="checkbox" name="q5" value="Game Engine Rendering"> Game Engine Rendering<br>
+<input type="checkbox" name="q5" value="Load Balancing"> Load Balancing<br>
+</div>
+
+<button type="button" onclick="gradeQuiz()">Submit</button>
+<button type="button" onclick="resetQuiz()">Reset</button>
+
+</form>
+<div id="results"></div>
+</div>
+
+<script>
+function gradeQuiz(){
+let score=0;
+let answers={
+q1:"CERN httpd",
+q2:"Apache",
+q3:"Windows",
+q4:"Internet Information Services",
+q5:["SSL/TLS Support","Static File Hosting","Load Balancing"]
+};
+
+let resultsHTML="";
+
+let q1=document.getElementById("q1").value.trim();
+if(q1.toLowerCase()==answers.q1.toLowerCase()){score++;resultsHTML+="<p class='correct'>Q1 Correct</p>";}
+else{resultsHTML+=`<p class='incorrect'>Q1 Incorrect. Correct answer: ${answers.q1}</p>`;}
+
+for(let i=2;i<=4;i++){
+let sel=document.querySelector(`input[name="q${i}"]:checked`);
+if(sel && sel.value===answers["q"+i]){
+score++; resultsHTML+=`<p class='correct'>Q${i} Correct</p>`;
+}else{
+resultsHTML+=`<p class='incorrect'>Q${i} Incorrect. Correct answer: ${answers["q"+i]}</p>`;
+}
+}
+
+let selectedQ5=[...document.querySelectorAll('input[name="q5"]:checked')].map(c=>c.value);
+let correctQ5=answers.q5;
+if(selectedQ5.length===correctQ5.length && selectedQ5.every(v=>correctQ5.includes(v))){
+score++; resultsHTML+="<p class='correct'>Q5 Correct</p>";
+}else{
+resultsHTML+=`<p class='incorrect'>Q5 Incorrect. Correct answers: ${correctQ5.join(", ")}</p>`;
+}
+
+let passFail=score>=4?"PASS":"FAIL";
+let passClass=passFail==="PASS"?"correct":"incorrect";
+
+document.getElementById("results").innerHTML=
+`<div class='result-box'>
+<h3 class='${passClass}'>${passFail}</h3>
+<p><strong>Total Score: ${score}/5</strong></p>
+${resultsHTML}
+</div>`;
+}
+
+function resetQuiz(){
+document.getElementById("quizForm").reset();
+document.getElementById("results").innerHTML="";
+}
+</script>
+
+</body>
+</html>
